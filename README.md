@@ -27,12 +27,6 @@ PythonPal is an interactive, AI-powered Python tutoring platform designed specif
 - Responsive layout for all devices
 - Intuitive chat interface
 
-### 📝 Homework Assignments
-- Practice exercises
-- Immediate feedback on submissions
-- Progress tracking
-- Reinforcement of learned concepts
-
 ## 🛠️ Technical Stack
 - **Frontend**: Next.js 14, React
 - **Styling**: Tailwind CSS, shadcn/ui components
