@@ -1,36 +1,117 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PythonPal: AI-Powered Python Tutor for Kids
 
-## Getting Started
+![PythonPal Screenshot](https://sjc.microlink.io/uhZZUxNDYUVgGq48BVQMhQersC5UuLZWqTb7mNuDa7CdbK21ctkVh1Hg2Ki-9g2tR3LX6Xr33U29Jp7kuBAaaA.jpeg)
 
-First, run the development server:
+## 🚀 Live Demo
+[Visit PythonPal](https://skc-ayushtaparia-chatbot.vercel.app/)
 
+## 📖 About
+PythonPal is an interactive, AI-powered Python tutoring platform designed specifically for children. It provides a fun, engaging way to learn Python programming through conversations with a customizable AI tutor.
+
+## ✨ Features
+
+### 🤖 Customizable AI Tutors
+- Choose from different tutor characters (Robot, Cat, Astronaut)
+- Each tutor has their own personality and teaching style
+- Engaging, child-friendly interactions
+
+### 📚 Interactive Learning
+- Real-time conversations with AI tutor
+- Instant responses to Python-related questions
+- Simple, easy-to-understand explanations
+- Interactive code examples and demonstrations
+
+### 🎨 User-Friendly Interface
+- Clean, modern design
+- Dark mode support
+- Responsive layout for all devices
+- Intuitive chat interface
+
+## 🛠️ Technical Stack
+- **Frontend**: Next.js 14, React
+- **Styling**: Tailwind CSS, shadcn/ui components
+- **AI Integration**: Google's Gemini API
+- **Deployment**: Vercel
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js 18 or higher
+- A Gemini API key
+
+### Installation
+
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/yourusername/pythonpal.git
+cd pythonpal
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```shellscript
+npm install
+```
 
-## Learn More
+3. Create a `.env.local` file and add your Gemini API key:
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```plaintext
+NEXT_PUBLIC_GEMINI_API_KEY=your_api_key_here
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+4. Run the development server:
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```shellscript
+npm run dev
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+
+## 🔑 API Key Configuration
+
+1. Get your API key from [Google AI Studio](https://makersuite.google.com/app/apikey)
+2. Enter the API key in the application's configuration page
+3. Start learning!
+
+
+## 🎯 Key Features in Detail
+
+### AI Tutor Customization
+
+Users can choose from different tutor characters, each designed to make learning more engaging:
+
+- **Robo**: A friendly robot who loves explaining coding concepts
+- **Whiskers**: A curious cat who makes learning fun
+- **Cosmo**: An adventurous astronaut who takes you on coding space missions
+
+
+### Interactive Chat Interface
+
+- Real-time messaging with AI tutor
+- Context-aware responses
+- Code snippet support
+- Error explanations
+- Best practices suggestions
+
+
+## 🎨 Design Features
+
+- Responsive design for all screen sizes
+- Dark mode support
+- Accessible UI components
+- Smooth animations and transitions
+- Child-friendly color scheme and typography
+
+
+## 👏 Acknowledgments
+
+- Google's Gemini API for powering the AI interactions
+- shadcn/ui for the beautiful UI components
+- Vercel for hosting and deployment
+- All contributors and supporters of the project
+
+
