@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import ReactMarkdown from "react-markdown";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Textarea } from "@/components/ui/textarea";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Input } from "@/components/ui/input";
+import { Loader2, ArrowLeft } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -12,9 +14,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+type Message = {
+  role: "user" | "assistant";
+  content: string;
+};
 
 export default function ChatPage() {
-  const [messages, setMessages] = useState([
+  const router = useRouter();
+  const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
       content:
@@ -23,37 +32,79 @@ export default function ChatPage() {
   ]);
   const [input, setInput] = useState("");
   const [tutor, setTutor] = useState("robot");
+  const [loading, setLoading] = useState(false);
 
   const handleSend = async () => {
     if (input.trim() === "") return;
 
-    const newMessages = [...messages, { role: "user", content: input }];
+    const newMessage: Message = { role: "user", content: input };
+    const newMessages = [...messages, newMessage];
     setMessages(newMessages);
     setInput("");
+    setLoading(true);
 
-    // TODO: Implement API call to AI service here
-    // For now, we'll just echo the user's message
-    setTimeout(() => {
+    try {
+      let apiKey = localStorage.getItem("apiKey");
+      apiKey =
+        apiKey === null ? "AIzaSyBepXRhPV6H_ajoqqGgyoRk0uRM58BODhs" : apiKey;
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ messages: newMessages, apiKey }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to get response from API");
+      }
+
+      const data = await response.json();
+
+      if (data.message?.content) {
+        setMessages([
+          ...newMessages,
+          { role: "assistant", content: data.message.content.trim() },
+        ]);
+      } else {
+        throw new Error("Invalid AI response format");
+      }
+    } catch (error) {
+      console.error("Error:", error);
       setMessages([
         ...newMessages,
-        { role: "assistant", content: `You said: ${input}` },
+        {
+          role: "assistant",
+          content: "Sorry, I encountered an error. Can you try asking again?",
+        },
       ]);
-    }, 1000);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const tutorCharacters = {
-    robot: { name: "Robo", image: "/placeholder.svg?height=40&width=40" },
-    cat: { name: "Whiskers", image: "/placeholder.svg?height=40&width=40" },
-    astronaut: { name: "Cosmo", image: "/placeholder.svg?height=40&width=40" },
+  const tutorCharacters: { [key: string]: { name: string } } = {
+    robot: { name: "Robo" },
+    cat: { name: "Whiskers" },
+    astronaut: { name: "Cosmo" },
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-b from-purple-100 to-pink-100 dark:from-purple-900 dark:to-pink-900">
+    <div className="flex flex-col h-screen bg-gradient-to-b from-gray-100 to-blue-200 dark:from-gray-900 dark:to-gray-800">
+      {/* Header with Back Button */}
       <header className="bg-white dark:bg-gray-800 shadow-md p-4">
-        <div className="max-w-4xl mx-auto flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-purple-600 dark:text-purple-400">
-            PythonPal Chat
-          </h1>
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          <div className="flex items-center justify-center gap-4">
+            <button
+              onClick={() => router.back()}
+              className="text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition"
+            >
+              <ArrowLeft className="h-6 w-6" />
+            </button>
+            <h1 className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+              PythonPal Chat
+            </h1>
+          </div>
           <div className="flex items-center gap-4">
             <Select onValueChange={setTutor} defaultValue={tutor}>
               <SelectTrigger className="w-[180px]">
@@ -75,67 +126,74 @@ export default function ChatPage() {
           </div>
         </div>
       </header>
-      <main className="flex-1 overflow-auto p-4">
-        <div className="max-w-4xl mx-auto space-y-4">
+
+      {/* Chat Messages */}
+      <main className="flex-1 overflow-auto p-4 no-scrollbar">
+        <div className="max-w-4xl mx-auto space-y-6">
           {messages.map((message, index) => (
             <div
               key={index}
-              className={`flex ${
+              className={`flex items-start gap-2  ${
                 message.role === "user" ? "justify-end" : "justify-start"
               }`}
             >
+              {/* Avatar */}
+              <Avatar className="h-9 w-9 text-sm">
+                <AvatarFallback>
+                  {message.role === "user"
+                    ? "U"
+                    : tutorCharacters[tutor]?.name[0]}
+                </AvatarFallback>
+              </Avatar>
+
+              {/* Message Bubble */}
               <div
-                className={`flex items-start space-x-2 ${
-                  message.role === "user" ? "flex-row-reverse" : ""
+                className={`px-4 py-2 rounded-xl max-w-[75%] shadow-lg text-sm ${
+                  message.role === "user"
+                    ? "bg-gradient-to-r from-blue-500 to-indigo-500 text-white"
+                    : "bg-gradient-to-r from-gray-100 to-gray-300 dark:from-gray-700 dark:to-gray-600 dark:text-white"
                 }`}
               >
-                <Avatar>
-                  <AvatarImage
-                    src={
-                      message.role === "user"
-                        ? "/placeholder.svg?height=40&width=40"
-                        : (
-                            tutorCharacters as {
-                              [key: string]: { name: string; image: string };
-                            }
-                          )[tutor].image
-                    }
-                  />
-                  <AvatarFallback>
-                    {message.role === "user"
-                      ? "U"
-                      : (
-                          tutorCharacters as {
-                            [key: string]: { name: string; image: string };
-                          }
-                        )[tutor]?.name[0]}
-                  </AvatarFallback>
-                </Avatar>
-                <div
-                  className={`p-3 rounded-lg ${
-                    message.role === "user"
-                      ? "bg-purple-500 text-white"
-                      : "bg-white dark:bg-gray-700 dark:text-white"
-                  }`}
-                >
-                  {message.content}
-                </div>
+                {message.role === "assistant" ? (
+                  <ReactMarkdown>{message.content}</ReactMarkdown>
+                ) : (
+                  message.content
+                )}
               </div>
             </div>
           ))}
+
+          {/* Loader */}
+          {loading && (
+            <div className="flex justify-start">
+              <div className="p-2 rounded-xl bg-white dark:bg-gray-700 dark:text-white flex items-center shadow-md">
+                <Loader2 className="animate-spin h-5 w-5 text-blue-500" />
+                <span className="ml-2 text-sm">Thinking...</span>
+              </div>
+            </div>
+          )}
         </div>
       </main>
+
+      {/* Chat Input */}
       <footer className="bg-white dark:bg-gray-800 shadow-md p-4">
-        <div className="max-w-4xl mx-auto flex space-x-2">
-          <Textarea
+        <div className="max-w-4xl mx-auto flex items-center space-x-2">
+          <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Type your message here..."
-            className="flex-1"
+            placeholder="Ask your question here..."
+            className="flex-1 bg-gray-100 dark:bg-gray-700 dark:text-white border-none rounded-xl px-3 py-6"
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                handleSend();
+              }
+            }}
           />
           <Button
             onClick={handleSend}
-            className="bg-purple-500 hover:bg-purple-600"
+            className="bg-blue-500 hover:bg-blue-600 rounded-xl px-6"
+            disabled={loading}
           >
             Send
           </Button>

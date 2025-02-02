@@ -81,6 +81,14 @@
   }
 }
 
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 @layer base {
   * {
     @apply border-border;
@@ -89,4 +97,3 @@
     @apply bg-background text-foreground;
   }
 }
-
