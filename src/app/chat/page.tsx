@@ -99,7 +99,7 @@ export default function ChatPage() {
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center justify-center gap-4">
             <button
-              onClick={() => router.back()}
+              onClick={() => router.push('/')}
               className="text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition"
             >
               <ArrowLeft className="h-6 w-6" />
