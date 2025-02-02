@@ -45,10 +45,6 @@ export default function ChatPage() {
 
     try {
       const apiKey = localStorage.getItem("apiKey");
-      if (!apiKey) {
-        alert("API key is required. Please set it.");
-        return;
-      }
 
       const response = await fetch("/api/chat", {
         method: "POST",
