@@ -13,9 +13,11 @@ const SYSTEM_PROMPT = `You are PythonPal, an AI tutor designed to help children 
 When explaining code, use simple analogies and real-world examples that children can relate to. If a child seems confused, break down the concept into smaller, more manageable parts.`;
 
 export async function POST(request: NextRequest) {
-  const { messages, apiKey } = await request.json(); // Get API key from frontend
+  const { messages, apiKey } = await request.json();
 
-  if (!apiKey) {
+  const finalApiKey = apiKey || process.env.GEMINI_API_KEY;
+
+  if (!finalApiKey) {
     return NextResponse.json({ error: "API key is required" }, { status: 400 });
   }
 
@@ -30,13 +32,13 @@ export async function POST(request: NextRequest) {
     const conversation = messages.map((m) => m.content).join("\n");
     const fullPrompt = `${SYSTEM_PROMPT}\n\nConversation:\n${conversation}`;
 
-    const response = await fetch(`${GEMINI_API_URL}?key=${apiKey}`, {
+    const response = await fetch(`${GEMINI_API_URL}?key=${finalApiKey}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        contents: [{ parts: [{ text: fullPrompt }] }],
+        contents: [{ parts: [{ text: fullPrompt }] }], // Send the prompt to Gemini API
       }),
     });
 
